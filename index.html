@@ -326,9 +326,10 @@ const FB=[
 {n:"Boundary Road",s:"WA",y:2025,a:1210,lat:46.2,lng:-120.3,m:1},
 {n:"Snow Peak",s:"WA",y:2025,a:1147,lat:48.5,lng:-118.5,m:3},
 ];
-function addFallback(){
+function addFallback(yearFilter){
   const cols={3:'#4a9e4a',2:'#c9a33a',1:'#6e675f'};
-  FB.forEach(f=>{
+  const fires=yearFilter?FB.filter(f=>f.y===yearFilter):FB;
+  fires.forEach(f=>{
     const r=Math.sqrt(f.a*4046.86/Math.PI),op=f.y===2025?.28:.18;
     const layer=L.circle([f.lat,f.lng],{radius:r,color:cols[f.m],fillColor:cols[f.m],fillOpacity:op,weight:f.m===3?2:1,opacity:f.m===3?.8:.5});
     layer.bindPopup(makePopup(f.n,f.a,f.s,f.y,f.m,'<div class="pd" style="color:#6e675f">Boundary: estimated circle</div>'),{closeButton:false});
@@ -397,13 +398,15 @@ async function tryNIFC(url, year){
     }catch(e){console.log('NIFC',svc.y,svc.u.split('/services/')[1],e.message)}
   }
   if(total>0){
-    toast('Loaded '+total+' NIFC fire perimeters','ok',4000);
-    document.getElementById('src').textContent='NIFC';
-  }else{
-    toast('NIFC unavailable, using estimated areas','err',5000);
-    addFallback();
-    document.getElementById('src').textContent='Local';
+    toast('Loaded '+total+' NIFC perimeters'+((!tried2024||!tried2025)?' + local data':''),'ok',4000);
   }
+  // Fill in fallback circles for any year NIFC didn't cover
+  if(!tried2024) addFallback(2024);
+  if(!tried2025) addFallback(2025);
+  // Source label
+  if(tried2024&&tried2025) document.getElementById('src').textContent='NIFC';
+  else if(tried2024||tried2025) document.getElementById('src').textContent='Mixed';
+  else document.getElementById('src').textContent='Local';
   updateStats();
 })();
 </script>
