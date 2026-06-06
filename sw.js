@@ -1,4 +1,4 @@
-const CACHE_NAME = 'morel-scout-v4';
+const CACHE_NAME = 'morel-scout-v6';
 const SHELL_ASSETS = [
   './',
   './index.html',

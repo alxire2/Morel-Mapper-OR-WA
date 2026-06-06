@@ -7,55 +7,37 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Morel Scout">
 <meta name="theme-color" content="#1a1a1a">
-<meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="icon-192.svg">
-<title>PNW Burn Morel Scout</title>
+<title>2025 Burn Morel Scout</title>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--safe-top:env(safe-area-inset-top,0px);--safe-bottom:env(safe-area-inset-bottom,0px)}
-body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a1a;color:#e0dcd5;overflow:hidden;height:100dvh;-webkit-tap-highlight-color:transparent}
-#map{width:100%;height:100dvh;z-index:1}
-.hdr{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(22,22,20,.96) 0%,rgba(22,22,20,.8) 70%,transparent 100%);padding:calc(8px + var(--safe-top)) 16px 20px;pointer-events:none}
-.hdr h1{font-size:15px;font-weight:700;color:#f0ebe4;letter-spacing:.3px}
-.hdr h1 .a{color:#c97b3a}
+:root{--st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px)}
+body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a1a;color:#e0dcd5;overflow:hidden;height:100dvh}
+#map{width:100%;height:100dvh}
+.hdr{position:fixed;top:0;left:0;right:0;z-index:1000;background:linear-gradient(180deg,rgba(22,22,20,.96) 0%,rgba(22,22,20,.75) 70%,transparent 100%);padding:calc(8px + var(--st)) 16px 18px;pointer-events:none}
+.hdr h1{font-size:15px;font-weight:700;color:#f0ebe4}.hdr h1 .a{color:#c97b3a}
 .hdr .sub{font-size:9px;color:#8a8278;font-family:'IBM Plex Mono',monospace;margin-top:2px}
-.toast{position:fixed;top:calc(52px + var(--safe-top));left:50%;transform:translateX(-50%);z-index:1001;background:rgba(26,26,24,.94);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 16px;font-size:11px;color:#8a8278;font-family:'IBM Plex Mono',monospace;transition:opacity .4s;max-width:90vw;text-align:center}
-.toast.ok{border-color:rgba(77,155,77,.4);color:#6db56d}
-.toast.err{border-color:rgba(201,80,50,.4);color:#c97b3a}
-.toast.hide{opacity:0;pointer-events:none}
-.filters{position:fixed;top:calc(50px + var(--safe-top));left:0;right:0;z-index:999;display:flex;gap:6px;padding:4px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
-.filters::-webkit-scrollbar{display:none}
-.fb{font-family:'IBM Plex Sans',sans-serif;font-size:12px;font-weight:700;padding:8px 18px;border-radius:20px;border:2px solid rgba(255,255,255,.12);background:rgba(30,30,28,.9);backdrop-filter:blur(8px);color:#8a8278;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-.fb:active{transform:scale(.96)}
-.fb.on{background:#c97b3a;border-color:#c97b3a;color:#fff;box-shadow:0 2px 12px rgba(201,123,58,.4)}
-.stats{position:fixed;bottom:calc(110px + var(--safe-bottom));right:12px;z-index:998;display:flex;gap:4px}
-.sc{background:rgba(26,26,24,.92);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:5px 10px;text-align:center}
-.sc .v{font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:700;color:#f0ebe4}
-.sc .l{font-size:7px;text-transform:uppercase;letter-spacing:.6px;color:#8a8278;font-weight:600}
-.panel-wrap{position:fixed;bottom:0;left:0;right:0;z-index:1000;pointer-events:none;padding-bottom:var(--safe-bottom)}
-.panel-tab{pointer-events:auto;background:rgba(26,26,24,.94);backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,.08);border-bottom:none;border-radius:12px 12px 0 0;margin:0 8px;cursor:pointer;padding:10px 16px 8px;display:flex;align-items:center;justify-content:center;gap:8px;touch-action:manipulation}
+#status{position:fixed;top:calc(52px + var(--st));left:16px;right:16px;z-index:1001;background:rgba(26,26,24,.94);backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 14px;font-size:11px;color:#8a8278;font-family:'IBM Plex Mono',monospace;line-height:1.5;transition:opacity .4s}
+#status.hide{opacity:0;pointer-events:none}
+#status .ok{color:#6db56d}
+#status .err{color:#c97b3a}
+.panel-wrap{position:fixed;bottom:0;left:0;right:0;z-index:1000;pointer-events:none;padding-bottom:var(--sb)}
+.panel-tab{pointer-events:auto;background:rgba(26,26,24,.94);border:1px solid rgba(255,255,255,.08);border-bottom:none;border-radius:12px 12px 0 0;margin:0 8px;cursor:pointer;padding:10px 16px 8px;display:flex;align-items:center;justify-content:center;gap:8px}
 .panel-tab .handle{width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.2)}
-.panel-tab .tab-label{font-size:11px;font-weight:600;color:#8a8278;letter-spacing:.5px;text-transform:uppercase}
-.panel-body{pointer-events:auto;background:rgba(26,26,24,.96);backdrop-filter:blur(14px);border-left:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08);margin:0 8px;padding:0 16px 16px;max-height:0;overflow:hidden;transition:max-height .35s ease,padding .35s ease}
-.panel-wrap.open .panel-body{max-height:55vh;overflow-y:auto;padding:12px 16px 20px;scrollbar-width:thin;scrollbar-color:#444 transparent}
-.panel-body::-webkit-scrollbar{width:4px}
-.panel-body::-webkit-scrollbar-thumb{background:#444;border-radius:4px}
-.panel-body h3{font-size:9px;text-transform:uppercase;letter-spacing:1.8px;color:#8a8278;margin-bottom:8px;font-weight:600}
-.panel-body h3:not(:first-child){margin-top:14px}
+.panel-tab .tl{font-size:11px;font-weight:600;color:#8a8278;text-transform:uppercase;letter-spacing:.5px}
+.panel-body{pointer-events:auto;background:rgba(26,26,24,.96);border-left:1px solid rgba(255,255,255,.08);border-right:1px solid rgba(255,255,255,.08);margin:0 8px;max-height:0;overflow:hidden;transition:max-height .35s,padding .35s}
+.panel-wrap.open .panel-body{max-height:55vh;overflow-y:auto;padding:12px 16px 20px}
+.panel-body h3{font-size:9px;text-transform:uppercase;letter-spacing:1.8px;color:#8a8278;margin:14px 0 8px;font-weight:600}
+.panel-body h3:first-child{margin-top:0}
 .lr{display:flex;align-items:center;gap:8px;margin-bottom:6px}
 .sw{width:14px;height:14px;border-radius:50%;flex-shrink:0;border:1px solid rgba(255,255,255,.1)}
-.ll{font-size:11px;color:#c4bdb4}
-.ld{font-size:10px;color:#6e675f;font-family:'IBM Plex Mono',monospace;margin-left:auto}
+.ll{font-size:11px;color:#c4bdb4}.ld{font-size:10px;color:#6e675f;font-family:'IBM Plex Mono',monospace;margin-left:auto}
 .tip{font-size:11px;color:#9e968c;line-height:1.5;margin-bottom:6px;padding-left:10px;border-left:2px solid rgba(201,123,58,.3)}
-.tip strong{color:#c4bdb4;font-weight:600}
-.timing{background:rgba(255,255,255,.04);border-radius:6px;padding:8px 10px;margin-bottom:6px}
-.tr{display:flex;justify-content:space-between;margin-bottom:3px}
-.ty{font-size:11px;font-weight:600;color:#c4bdb4}
-.tn{font-size:10px;color:#8a8278;font-family:'IBM Plex Mono',monospace}
+.tip strong{color:#c4bdb4}
 .data-src{font-size:10px;color:#6e675f;font-family:'IBM Plex Mono',monospace;margin-top:12px;padding-top:8px;border-top:1px solid rgba(255,255,255,.05);line-height:1.6}
 .data-src a{color:#8a8278;text-decoration:underline}
 .leaflet-popup-content-wrapper{background:rgba(26,26,24,.96)!important;border:1px solid rgba(255,255,255,.1)!important;border-radius:8px!important;box-shadow:0 6px 28px rgba(0,0,0,.5)!important;color:#e0dcd5!important}
@@ -64,11 +46,11 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a1a;color:#e0dcd5;ove
 .pn{font-size:14px;font-weight:700;color:#f0ebe4;margin-bottom:5px}
 .pd{font-size:11px;color:#8a8278;font-family:'IBM Plex Mono',monospace;margin-bottom:2px;line-height:1.4}
 .pd .hl{color:#c97b3a;font-weight:600}
-.morel-bar{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)}
-.morel-bar .stars{font-size:14px;letter-spacing:2px}
-.morel-bar .mt{font-size:10px;color:#8a8278;margin-top:2px;line-height:1.4}
-.leaflet-top.leaflet-right{top:calc(90px + var(--safe-top))!important}
-.leaflet-top.leaflet-left{top:calc(90px + var(--safe-top))!important}
+.mb{margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06)}
+.mb .st{font-size:14px;letter-spacing:2px}
+.mb .mt{font-size:10px;color:#8a8278;margin-top:2px;line-height:1.4}
+.leaflet-top.leaflet-right{top:calc(55px + var(--st))!important}
+.leaflet-top.leaflet-left{top:calc(55px + var(--st))!important}
 .leaflet-control-zoom{border:none!important}
 .leaflet-control-zoom a{background:rgba(26,26,24,.92)!important;color:#8a8278!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:5px!important;width:36px!important;height:36px!important;line-height:36px!important;font-size:18px!important}
 .leaflet-control-zoom a:hover{color:#f0ebe4!important}
@@ -76,338 +58,205 @@ body{font-family:'IBM Plex Sans',sans-serif;background:#1a1a1a;color:#e0dcd5;ove
 .leaflet-control-attribution{font-size:8px!important;background:rgba(26,26,24,.7)!important;color:#6e675f!important}
 .leaflet-control-attribution a{color:#8a8278!important}
 .leaflet-control-layers{border:none!important;border-radius:8px!important}
-.leaflet-control-layers-expanded{background:rgba(26,26,24,.94)!important;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.08)!important;color:#c4bdb4!important;padding:8px 14px!important;font-family:'IBM Plex Sans',sans-serif!important;font-size:12px!important}
+.leaflet-control-layers-expanded{background:rgba(26,26,24,.94)!important;border:1px solid rgba(255,255,255,.08)!important;color:#c4bdb4!important;padding:8px 14px!important;font-size:12px!important}
 .leaflet-control-layers-toggle{background-color:rgba(26,26,24,.92)!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:6px!important;width:36px!important;height:36px!important}
 .leaflet-control-layers label{color:#c4bdb4!important}
 .leaflet-control-layers-separator{border-color:rgba(255,255,255,.08)!important}
 .station-icon{background:none;border:none}
 .station-dot{width:10px;height:10px;border-radius:50%;border:2px solid #fff;position:relative;top:-5px;left:-5px}
-.locate-btn{position:fixed;z-index:999;right:12px;bottom:calc(60px + var(--safe-bottom));background:rgba(26,26,24,.92);border:1px solid rgba(255,255,255,.08);border-radius:6px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8278;font-size:18px}
-.locate-btn:active{color:#f0ebe4;border-color:rgba(255,255,255,.2)}
-@media(min-width:768px){
-  .panel-wrap{left:16px;right:auto;bottom:16px;width:280px}
-  .panel-tab{border:1px solid rgba(255,255,255,.08);border-radius:10px 10px 0 0;margin:0}
-  .panel-body{border:1px solid rgba(255,255,255,.08);border-top:none;border-radius:0 0 10px 10px;margin:0}
-  .panel-wrap.open .panel-body{max-height:calc(100vh - 160px)}
-  .filters{left:auto;right:16px;padding:0;width:auto;max-width:360px;flex-wrap:wrap;justify-content:flex-end}
-}
+.locate-btn{position:fixed;z-index:999;right:12px;bottom:calc(60px + var(--sb));background:rgba(26,26,24,.92);border:1px solid rgba(255,255,255,.08);border-radius:6px;width:36px;height:36px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#8a8278;font-size:18px}
+@media(min-width:768px){.panel-wrap{left:16px;right:auto;bottom:16px;width:280px}.panel-tab,.panel-body{margin:0}}
 </style>
 </head>
 <body>
-<div class="hdr"><h1>PNW <span class="a">Burn Morel</span> Scout</h1><div class="sub">NIFC perimeters &bull; SCAN/SNOTEL soil stations &bull; morel habitat</div></div>
-<div class="toast hide" id="toast"></div>
-<div class="filters">
-  <button class="fb on" data-f="all">All Fires</button>
-  <button class="fb" data-f="2024">2024</button>
-  <button class="fb" data-f="2025">2025</button>
-  <button class="fb" data-f="prime">&#9733; Prime</button>
-</div>
-<div class="stats">
-  <div class="sc"><div class="v" id="sf">--</div><div class="l">Fires</div></div>
-  <div class="sc"><div class="v" id="sa">--</div><div class="l">Acres</div></div>
-  <div class="sc"><div class="v" id="src">--</div><div class="l">Source</div></div>
-</div>
-<button class="locate-btn" id="locateBtn">&#9737;</button>
-<div class="panel-wrap" id="panelWrap">
-  <div class="panel-tab" id="panelTab"><div class="handle"></div><span class="tab-label">Legend &amp; Info</span></div>
+<div class="hdr"><h1>2025 <span class="a">Burn Morel</span> Scout</h1><div class="sub">OR &amp; WA year 1 burns for 2026 picking</div></div>
+<div id="status">Loading fire boundaries from NIFC...</div>
+<button class="locate-btn" id="loc">&#9737;</button>
+<div class="panel-wrap" id="pw">
+  <div class="panel-tab" id="pt"><div class="handle"></div><span class="tl">Legend &amp; Info</span></div>
   <div class="panel-body">
     <h3>Morel Potential</h3>
-    <div class="lr"><div class="sw" style="background:#4a9e4a"></div><span class="ll">&#9733;&#9733;&#9733; Prime</span><span class="ld">Timber/conifer</span></div>
-    <div class="lr"><div class="sw" style="background:#c9a33a"></div><span class="ll">&#9733;&#9733;&#9734; Moderate</span><span class="ld">Mixed fuel</span></div>
-    <div class="lr"><div class="sw" style="background:#6e675f"></div><span class="ll">&#9733;&#9734;&#9734; Low</span><span class="ld">Grass/brush/sage</span></div>
-    <h3>Soil Temp Stations</h3>
-    <div class="lr"><div class="sw" style="background:#5b9bd5"></div><span class="ll">SCAN</span><span class="ld">Tap for live data</span></div>
-    <div class="lr"><div class="sw" style="background:#a07dd5"></div><span class="ll">SNOTEL</span><span class="ld">Tap for live data</span></div>
-    <div style="font-size:10px;color:#6e675f;line-height:1.4;margin-bottom:4px">Morels fruit ~50&deg;F soil temp at 4" depth.</div>
-    <h3>2026 Timing</h3>
-    <div class="timing">
-      <div class="tr"><span class="ty" style="color:#d64545">2025 fires</span><span class="tn">Year 1 = PEAK</span></div>
-      <div class="tr"><span class="ty" style="color:#c97b3a">2024 fires</span><span class="tn">Year 2 = declining</span></div>
-    </div>
-    <h3>Picking Tips</h3>
-    <div class="tip"><strong>Elevation:</strong> 2,500-5,500 ft. Season moves uphill March-July.</div>
-    <div class="tip"><strong>Trees:</strong> Mixed conifer: Douglas fir, grand fir, ponderosa, true firs.</div>
-    <div class="tip"><strong>Slope:</strong> S-facing first, then N-facing as season progresses.</div>
-    <div class="tip"><strong>Severity:</strong> Moderate burn > scorched earth. Near partially burned conifers.</div>
-    <div class="tip"><strong>Permits:</strong> USFS free personal use permit required on NF land.</div>
-    <div class="data-src"><strong>Sources:</strong><br>Perimeters: <a href="https://data-nifc.opendata.arcgis.com" target="_blank" rel="noopener">NIFC Open Data</a><br>Soil: <a href="https://www.nrcs.usda.gov" target="_blank" rel="noopener">NRCS SCAN/SNOTEL</a><br>Tools: <a href="https://geoforager.com" target="_blank" rel="noopener">GeoForager</a> | <a href="https://salishmushrooms.com/2026-morel-maps/" target="_blank" rel="noopener">Salish Mushrooms</a></div>
+    <div class="lr"><div class="sw" style="background:#4a9e4a"></div><span class="ll">&#9733;&#9733;&#9733; Prime</span><span class="ld">Conifer</span></div>
+    <div class="lr"><div class="sw" style="background:#c9a33a"></div><span class="ll">&#9733;&#9733;&#9734; Moderate</span><span class="ld">Mixed</span></div>
+    <div class="lr"><div class="sw" style="background:#6e675f"></div><span class="ll">&#9733;&#9734;&#9734; Low</span><span class="ld">Grass/sage</span></div>
+    <h3>Soil Stations</h3>
+    <div class="lr"><div class="sw" style="background:#5b9bd5"></div><span class="ll">SCAN / SNOTEL</span><span class="ld">Tap for data</span></div>
+    <h3>Tips</h3>
+    <div class="tip"><strong>Year 1 = peak.</strong> All fires shown are 2025 burns.</div>
+    <div class="tip"><strong>Elevation:</strong> 2,500-5,500 ft. Season moves uphill Mar-Jul.</div>
+    <div class="tip"><strong>Trees:</strong> Douglas fir, grand fir, ponderosa, true firs.</div>
+    <div class="tip"><strong>Slope:</strong> S-facing first, N-facing later.</div>
+    <div class="tip"><strong>Permits:</strong> USFS free personal use permit on NF land.</div>
+    <div class="data-src"><a href="https://data-nifc.opendata.arcgis.com" target="_blank">NIFC</a> &bull; <a href="https://geoforager.com" target="_blank">GeoForager</a> &bull; <a href="https://salishmushrooms.com/2026-morel-maps/" target="_blank">Salish Mushrooms</a></div>
   </div>
 </div>
 <div id="map"></div>
 <script>
-if('serviceWorker' in navigator){navigator.serviceWorker.register('./sw.js').catch(()=>{})}
-document.getElementById('panelTab').addEventListener('click',()=>{document.getElementById('panelWrap').classList.toggle('open')});
-const toastEl=document.getElementById('toast');
-function toast(m,c,d){toastEl.textContent=m;toastEl.className='toast '+(c||'');setTimeout(()=>toastEl.classList.add('hide'),d||5000)}
+if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});
+document.getElementById('pt').addEventListener('click',()=>document.getElementById('pw').classList.toggle('open'));
 
-// === STATE ===
-let activeFilter='all';
-let allFires=[]; // {layer, data:{name,acres,state,year,morel,source}}
-
-// === MAP ===
-const topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'OpenTopoMap'});
 const esri=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Esri'});
+const topo=L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png',{maxZoom:17,attribution:'OpenTopoMap'});
 const sat=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:18,attribution:'Esri'});
-const dark=L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{maxZoom:18,subdomains:'abcd',attribution:'CartoDB'});
-const map=L.map('map',{center:[45.5,-120.5],zoom:6,layers:[esri]});
-document.getElementById('locateBtn').addEventListener('click',()=>{map.locate({setView:true,maxZoom:10})});
-map.on('locationfound',e=>{L.circleMarker(e.latlng,{radius:8,color:'#5b9bd5',fillColor:'#5b9bd5',fillOpacity:.5,weight:2}).addTo(map).bindPopup('<div class="pn" style="color:#5b9bd5">You</div>').openPopup()});
+const map=L.map('map',{center:[46.0,-120.5],zoom:6,layers:[esri]});
+document.getElementById('loc').addEventListener('click',()=>map.locate({setView:true,maxZoom:10}));
+map.on('locationfound',e=>L.circleMarker(e.latlng,{radius:8,color:'#5b9bd5',fillColor:'#5b9bd5',fillOpacity:.5,weight:2}).addTo(map).bindPopup('<div class="pn" style="color:#5b9bd5">You</div>').openPopup());
 
-// === HELPERS ===
-function fmtA(n){return n?Math.round(n).toLocaleString():'?'}
-function mStars(r){return r===3?'<span style="color:#4cb54c">&#9733;&#9733;&#9733;</span>':r===2?'<span style="color:#d4b34a">&#9733;&#9733;&#9734;</span>':'<span style="color:#7a736a">&#9733;&#9734;&#9734;</span>'}
-function isVis(d){
-  if(activeFilter==='all')return true;
-  if(activeFilter==='2024')return d.year===2024;
-  if(activeFilter==='2025')return d.year===2025;
-  if(activeFilter==='prime')return d.morel===3;
-  return true;
-}
-function updateStats(){
-  let c=0,t=0;
-  allFires.forEach(f=>{if(isVis(f.data)){c++;t+=f.data.acres||0}});
-  document.getElementById('sf').textContent=c;
-  document.getElementById('sa').textContent=t>=1e6?(t/1e6).toFixed(1)+'M':t>=1000?Math.round(t/1000)+'K':t;
-}
-function applyFilter(){
-  allFires.forEach(f=>{
-    if(isVis(f.data)){if(!map.hasLayer(f.layer))f.layer.addTo(map)}
-    else{if(map.hasLayer(f.layer))map.removeLayer(f.layer)}
-  });
-  updateStats();
-}
-function makePopup(name,acres,state,year,morel,extra){
-  const yt=year===2025?'<span style="color:#d64545;font-weight:700">2025</span> <span style="color:#d64545;font-size:9px">YEAR 1 PEAK</span>':'<span style="color:#c97b3a">2024</span> <span style="color:#8a8278;font-size:9px">Year 2</span>';
-  return '<div class="pn">'+name+'</div><div class="pd"><span class="hl">'+fmtA(acres)+' acres</span></div><div class="pd">'+state+' &bull; '+yt+'</div>'+(extra||'')+'<div class="morel-bar"><div class="stars">'+mStars(morel)+'</div></div>';
+const statusEl=document.getElementById('status');
+function log(msg,cls){statusEl.innerHTML+='<br><span class="'+(cls||'')+'">'+msg+'</span>';statusEl.scrollTop=999}
+function hideStatus(){setTimeout(()=>statusEl.classList.add('hide'),8000)}
+
+// Helpers
+const C={3:'#4a9e4a',2:'#c9a33a',1:'#6e675f'};
+const T={3:'Conifer burn. Scout S-facing, 3-5K ft.',2:'Mixed. Check timbered sections.',1:'Grass/sage. Unlikely morel.'};
+function mS(r){return r===3?'<span style="color:#4cb54c">&#9733;&#9733;&#9733;</span>':r===2?'<span style="color:#d4b34a">&#9733;&#9733;&#9734;</span>':'<span style="color:#7a736a">&#9733;&#9734;&#9734;</span>'}
+function fuelM(fg){const f=(fg||'').toLowerCase();if(f.includes('timber')||f.includes('slash'))return 3;if(f.includes('brush')||f.includes('shrub'))return 2;if(f.includes('grass'))return 1;return 2}
+function popup(name,acres,state,morel,extra){
+  return '<div class="pn">'+name+'</div><div class="pd"><span class="hl">'+(acres?Math.round(acres).toLocaleString():'?')+' acres</span></div><div class="pd">'+state+' &bull; 2025 &bull; Year 1</div>'+(extra||'')+'<div class="mb"><div class="st">'+mS(morel)+'</div><div class="mt">'+T[morel]+'</div></div>';
 }
 
-// Filter buttons
-document.querySelectorAll('.fb').forEach(b=>b.addEventListener('click',()=>{
-  document.querySelectorAll('.fb').forEach(x=>x.classList.remove('on'));
-  b.classList.add('on');
-  activeFilter=b.dataset.f;
-  applyFilter();
-}));
+// Habitat
+const hab=L.layerGroup();
+[[45.6,-121.8],[45.5,-121.4],[45,-121.5],[44.5,-121.6],[44,-121.8],[43.5,-122],[43,-122.2],[42.8,-122.3],[42.8,-121.8],[43,-121.6],[43.5,-121.5],[44,-121.3],[44.5,-121.1],[45,-121],[45.3,-121],[45.6,-121.3]].length&&
+[{n:"OR East Cascades",c:[[45.6,-121.8],[45.5,-121.4],[45,-121.5],[44.5,-121.6],[44,-121.8],[43.5,-122],[43,-122.2],[42.8,-122.3],[42.8,-121.8],[43,-121.6],[43.5,-121.5],[44,-121.3],[44.5,-121.1],[45,-121],[45.3,-121],[45.6,-121.3]]},
+{n:"OR West Cascades",c:[[44.2,-122.8],[44.2,-122],[43.8,-122],[43.5,-122],[43,-122.2],[42.8,-122.5],[42.8,-123],[43,-122.8],[43.5,-122.7],[43.8,-122.6]]},
+{n:"Blue Mountains",c:[[45.3,-118],[45.5,-118.5],[45.3,-119.2],[44.8,-119.5],[44.2,-119.3],[44,-118.8],[44,-118.2],[44.3,-117.8],[44.8,-117.5],[45.2,-117.5]]},
+{n:"Ochoco Mtns",c:[[44.7,-120],[44.7,-120.8],[44.5,-121],[44.1,-120.8],[44.1,-120.2],[44.3,-119.8],[44.5,-119.8]]},
+{n:"WA East Cascades",c:[[49,-121],[49,-120.2],[48.5,-120],[48,-120.2],[47.5,-120.5],[47,-120.8],[46.5,-121.2],[46,-121.5],[45.7,-121.6],[45.7,-121.2],[46,-121],[46.5,-120.7],[47,-120.3],[47.5,-120],[48,-119.8],[48.5,-119.6],[49,-120]]},
+{n:"Okanogan/Colville",c:[[49,-118],[49,-119.5],[48.5,-119.5],[48,-119],[48,-117.8],[48.5,-117.5]]}
+].forEach(z=>hab.addLayer(L.polygon(z.c,{color:'#2d8a2d',fillColor:'#3da33d',fillOpacity:.1,weight:1.5,dashArray:'6,4',opacity:.4}).bindPopup('<div class="pn" style="color:#6db56d">'+z.n+'</div>',{closeButton:false})));
+hab.addTo(map);
 
-// === HABITAT ZONES ===
-const habGrp=L.layerGroup();
-[
-  {n:"OR East Cascades",d:"Deschutes/Willamette/Mt Hood NF east slopes. 2,500-5,500 ft.",c:[[45.6,-121.8],[45.5,-121.4],[45,-121.5],[44.5,-121.6],[44,-121.8],[43.5,-122],[43,-122.2],[42.8,-122.3],[42.8,-121.8],[43,-121.6],[43.5,-121.5],[44,-121.3],[44.5,-121.1],[45,-121],[45.3,-121],[45.6,-121.3]]},
-  {n:"OR West Cascades",d:"Willamette/Umpqua NF. Dense Doug fir, hemlock.",c:[[44.2,-122.8],[44.2,-122],[43.8,-122],[43.5,-122],[43,-122.2],[42.8,-122.5],[42.8,-123],[43,-122.8],[43.5,-122.7],[43.8,-122.6]]},
-  {n:"Blue Mountains",d:"Grand fir, Doug fir, ponderosa, spruce. 3,500-6,000 ft.",c:[[45.3,-118],[45.5,-118.5],[45.3,-119.2],[44.8,-119.5],[44.2,-119.3],[44,-118.8],[44,-118.2],[44.3,-117.8],[44.8,-117.5],[45.2,-117.5]]},
-  {n:"Ochoco Mtns",d:"Ponderosa/juniper to mixed conifer. 3,000-5,500 ft.",c:[[44.7,-120],[44.7,-120.8],[44.5,-121],[44.1,-120.8],[44.1,-120.2],[44.3,-119.8],[44.5,-119.8]]},
-  {n:"Wallowa Mtns",d:"Grand fir, spruce. 4,000-6,500 ft.",c:[[45.6,-117],[45.6,-117.8],[45.2,-117.8],[45,-117.5],[45,-117],[45.3,-116.8]]},
-  {n:"Fremont-Winema NF",d:"Ponderosa, lodgepole. 4,000-6,000 ft.",c:[[43.2,-121],[43.2,-121.8],[42.6,-121.8],[42.2,-121.5],[42.2,-120.8],[42.6,-120.5],[43,-120.5]]},
-  {n:"WA East Cascades",d:"Wenatchee/Okanogan NF east slopes. 2,000-5,500 ft.",c:[[49,-121],[49,-120.2],[48.5,-120],[48,-120.2],[47.5,-120.5],[47,-120.8],[46.5,-121.2],[46,-121.5],[45.7,-121.6],[45.7,-121.2],[46,-121],[46.5,-120.7],[47,-120.3],[47.5,-120],[48,-119.8],[48.5,-119.6],[49,-120]]},
-  {n:"Okanogan/Colville NF",d:"Ponderosa, Doug fir, larch. NE WA. 2,500-5,000 ft.",c:[[49,-118],[49,-119.5],[48.5,-119.5],[48,-119],[48,-117.8],[48.5,-117.5]]},
-].forEach(z=>{habGrp.addLayer(L.polygon(z.c,{color:'#2d8a2d',fillColor:'#3da33d',fillOpacity:.12,weight:1.5,dashArray:'6,4',opacity:.5}).bindPopup('<div class="pn" style="color:#6db56d">'+z.n+'</div><div class="pd">'+z.d+'</div>',{closeButton:false}))});
-habGrp.addTo(map);
+// Stations
+const sta=L.layerGroup();
+[{n:"Bourne",c:2064,lat:44.82,lng:-118.20,e:5960,s:"OR"},{n:"Prineville",c:2078,lat:44.28,lng:-120.74,e:3260,s:"OR"},{n:"Dufur",c:2091,lat:45.45,lng:-121.13,e:4290,s:"OR"},{n:"McKenzie",c:619,lat:44.22,lng:-121.95,e:4900,s:"OR"},{n:"Ochoco Meadow",c:684,lat:44.25,lng:-120.58,e:4960,s:"OR"},{n:"Santiam Jct",c:757,lat:44.43,lng:-121.85,e:3780,s:"OR"},{n:"Blewett Pass",c:357,lat:47.53,lng:-120.62,e:4240,s:"WA"},{n:"Stampede Pass",c:791,lat:47.28,lng:-121.33,e:3860,s:"WA"},{n:"Fish Lake",c:447,lat:46.55,lng:-121.08,e:3440,s:"WA"},{n:"Rainy Pass",c:730,lat:48.52,lng:-120.73,e:4780,s:"WA"}
+].forEach(st=>{sta.addLayer(L.marker([st.lat,st.lng],{icon:L.divIcon({className:'station-icon',html:'<div class="station-dot" style="background:#5b9bd5"></div>',iconSize:[10,10]})}).bindPopup('<div class="pn" style="color:#5b9bd5">'+st.n+'</div><div class="pd">'+st.e+"' &bull; "+st.s+'</div><div style="margin-top:6px"><a href="https://wcc.sc.egov.usda.gov/nwcc/site?sitenum='+st.c+'" target="_blank" style="color:#5b9bd5;font-weight:600;text-decoration:underline">NRCS Live Data &rarr;</a></div>',{closeButton:false}))});
+sta.addTo(map);
+L.control.layers({"ESRI Topo":esri,"OpenTopo":topo,"Satellite":sat},{"Morel Habitat":hab,"Soil Stations":sta},{position:'topright',collapsed:true}).addTo(map);
 
-// === STATIONS ===
-const staGrp=L.layerGroup();
-[
-  {n:"Bourne",c:2064,lat:44.82,lng:-118.20,e:5960,s:"OR",t:"SCAN"},{n:"John Day",c:2050,lat:44.42,lng:-118.95,e:3750,s:"OR",t:"SCAN"},
-  {n:"Kimberly",c:2074,lat:44.73,lng:-119.65,e:4090,s:"OR",t:"SCAN"},{n:"Prineville",c:2078,lat:44.28,lng:-120.74,e:3260,s:"OR",t:"SCAN"},
-  {n:"Dufur",c:2091,lat:45.45,lng:-121.13,e:4290,s:"OR",t:"SCAN"},{n:"Summer Rim",c:2118,lat:42.75,lng:-120.73,e:6420,s:"OR",t:"SCAN"},
-  {n:"Post",c:2197,lat:44.05,lng:-120.30,e:4500,s:"OR",t:"SCAN"},{n:"Silvies",c:2207,lat:43.95,lng:-118.95,e:4580,s:"OR",t:"SCAN"},
-  {n:"McKenzie",c:619,lat:44.22,lng:-121.95,e:4900,s:"OR",t:"SNOTEL"},{n:"Ochoco Meadow",c:684,lat:44.25,lng:-120.58,e:4960,s:"OR",t:"SNOTEL"},
-  {n:"Annie Spring",c:304,lat:42.93,lng:-122.17,e:5960,s:"OR",t:"SNOTEL"},{n:"Bigelow Camp",c:345,lat:44.72,lng:-118.72,e:5600,s:"OR",t:"SNOTEL"},
-  {n:"Santiam Jct",c:757,lat:44.43,lng:-121.85,e:3780,s:"OR",t:"SNOTEL"},{n:"Lind",c:2009,lat:46.98,lng:-118.60,e:1640,s:"WA",t:"SCAN"},
-  {n:"Blewett Pass",c:357,lat:47.53,lng:-120.62,e:4240,s:"WA",t:"SNOTEL"},{n:"Lyman Lake",c:614,lat:48.18,lng:-120.92,e:5980,s:"WA",t:"SNOTEL"},
-  {n:"Stampede Pass",c:791,lat:47.28,lng:-121.33,e:3860,s:"WA",t:"SNOTEL"},{n:"Fish Lake",c:447,lat:46.55,lng:-121.08,e:3440,s:"WA",t:"SNOTEL"},
-  {n:"Rainy Pass",c:730,lat:48.52,lng:-120.73,e:4780,s:"WA",t:"SNOTEL"},{n:"Harts Pass",c:515,lat:48.72,lng:-120.65,e:6250,s:"WA",t:"SNOTEL"},
-].forEach(st=>{
-  const col=st.t==='SCAN'?'#5b9bd5':'#a07dd5';
-  staGrp.addLayer(L.marker([st.lat,st.lng],{icon:L.divIcon({className:'station-icon',html:'<div class="station-dot" style="background:'+col+'"></div>',iconSize:[10,10]})}).bindPopup('<div class="pn" style="color:'+col+'">'+st.n+' ('+st.t+')</div><div class="pd">'+st.e.toLocaleString()+' ft &bull; '+st.s+'</div><div style="margin-top:8px"><a href="https://wcc.sc.egov.usda.gov/nwcc/site?sitenum='+st.c+'" target="_blank" rel="noopener" style="display:inline-block;background:rgba(91,155,213,.15);border:1px solid rgba(91,155,213,.3);border-radius:6px;padding:6px 12px;color:#5b9bd5;font-size:12px;font-weight:600;text-decoration:none">NRCS Live Data &rarr;</a></div>',{closeButton:false}));
-});
-staGrp.addTo(map);
-
-// === LAYER CONTROL ===
-L.control.layers({"ESRI Topo":esri,"OpenTopo":topo,"Satellite":sat,"Dark":dark},{"Morel Habitat":habGrp,"Soil Stations":staGrp},{position:'topright',collapsed:true}).addTo(map);
-
-// === FIRE DATA (fallback circles, used only if NIFC fails) ===
-const FB=[
-// === 2024 OREGON ===
-{n:"Durkee",s:"OR",y:2024,a:294265,lat:44.548,lng:-117.477,m:1},
-{n:"Battle Mtn Cx",s:"OR",y:2024,a:183026,lat:45.0,lng:-119.0,m:2},
-{n:"Rail Ridge",s:"OR",y:2024,a:176661,lat:44.3,lng:-119.5,m:2},
-{n:"Falls",s:"OR",y:2024,a:151680,lat:43.8,lng:-119.0,m:1},
-{n:"Lone Rock",s:"OR",y:2024,a:137222,lat:45.0,lng:-120.0,m:1},
-{n:"Cow Valley",s:"OR",y:2024,a:133490,lat:44.2,lng:-117.9,m:1},
-{n:"Hole In The Ground",s:"OR",y:2024,a:98977,lat:43.5,lng:-117.5,m:1},
-{n:"Crazy Creek",s:"OR",y:2024,a:86968,lat:44.4,lng:-120.3,m:2},
-{n:"Warner Peak",s:"OR",y:2024,a:65866,lat:42.3,lng:-120.2,m:1},
-{n:"Badlands Cx",s:"OR",y:2024,a:54563,lat:44.7,lng:-117.8,m:1},
-{n:"Telephone",s:"OR",y:2024,a:54034,lat:43.6,lng:-118.8,m:1},
-{n:"Wiley Flat",s:"OR",y:2024,a:30185,lat:44.3,lng:-120.8,m:2},
-{n:"Shoe Fly",s:"OR",y:2024,a:26817,lat:44.6,lng:-120.0,m:2},
-{n:"Lane 1",s:"OR",y:2024,a:25951,lat:43.8,lng:-122.5,m:3},
-{n:"Courtrock",s:"OR",y:2024,a:20019,lat:44.9,lng:-119.3,m:2},
-{n:"Larch Creek",s:"OR",y:2024,a:18286,lat:45.3,lng:-121.2,m:2},
-{n:"Town Gulch",s:"OR",y:2024,a:18234,lat:44.7,lng:-117.6,m:1},
-{n:"Little Valley",s:"OR",y:2024,a:17901,lat:43.8,lng:-117.5,m:1},
-{n:"Oak Canyon",s:"OR",y:2024,a:15170,lat:45.3,lng:-120.9,m:1},
-{n:"Pilot Rock",s:"OR",y:2024,a:11349,lat:45.5,lng:-118.8,m:2},
-{n:"208 Fire",s:"OR",y:2024,a:11263,lat:43.7,lng:-122.3,m:3},
-{n:"Diamond Cx",s:"OR",y:2024,a:11141,lat:43.3,lng:-122.4,m:3},
-{n:"Soldier Creek",s:"OR",y:2024,a:11061,lat:43.0,lng:-117.8,m:1},
-{n:"Sand",s:"OR",y:2024,a:7582,lat:44.8,lng:-118.9,m:2},
-{n:"Fuller Lake",s:"OR",y:2024,a:6378,lat:43.4,lng:-122.3,m:3},
-{n:"Little Yamsay",s:"OR",y:2024,a:6340,lat:42.85,lng:-121.7,m:2},
-{n:"Coffeepot",s:"OR",y:2024,a:6176,lat:43.7,lng:-122.1,m:3},
-{n:"Chalk",s:"OR",y:2024,a:5991,lat:43.75,lng:-122.15,m:3},
-{n:"Elk Lane",s:"OR",y:2024,a:5176,lat:44.6,lng:-121.2,m:2},
-{n:"Middle Fork",s:"OR",y:2024,a:5286,lat:43.0,lng:-122.1,m:3},
-{n:"Salt Creek",s:"OR",y:2024,a:4102,lat:42.4,lng:-122.7,m:3},
-{n:"Darlene 3",s:"OR",y:2024,a:3903,lat:43.9,lng:-121.3,m:2},
-{n:"Ore",s:"OR",y:2024,a:3479,lat:44.0,lng:-122.2,m:3},
-{n:"Whisky Creek",s:"OR",y:2024,a:3240,lat:45.5,lng:-121.6,m:3},
-// === 2024 WASHINGTON ===
-{n:"Swawilla",s:"WA",y:2024,a:53462,lat:48.1,lng:-118.7,m:2},
-{n:"Bighorn",s:"WA",y:2024,a:51569,lat:45.85,lng:-121.0,m:2},
-{n:"Retreat",s:"WA",y:2024,a:45601,lat:46.65,lng:-121.05,m:3},
-{n:"Pioneer",s:"WA",y:2024,a:38735,lat:48.3,lng:-120.7,m:3},
-{n:"Cougar Creek",s:"WA",y:2024,a:24095,lat:46.2,lng:-117.2,m:1},
-{n:"Lower Granite",s:"WA",y:2024,a:14482,lat:46.3,lng:-117.4,m:1},
-{n:"Williams Mine",s:"WA",y:2024,a:13092,lat:46.1,lng:-121.5,m:3},
-{n:"Black Canyon",s:"WA",y:2024,a:9211,lat:46.5,lng:-120.8,m:2},
-{n:"Beam Road",s:"WA",y:2024,a:8542,lat:46.6,lng:-120.5,m:1},
-{n:"Jack Wells",s:"WA",y:2024,a:8373,lat:48.1,lng:-119.8,m:2},
-{n:"Calcite Creek",s:"WA",y:2024,a:4500,lat:49.0,lng:-120.8,m:3},
-{n:"Bridge Creek",s:"WA",y:2024,a:3998,lat:48.3,lng:-118.5,m:2},
-{n:"Stayman",s:"WA",y:2024,a:3118,lat:47.5,lng:-120.1,m:3},
-{n:"Slide Ranch",s:"WA",y:2024,a:3106,lat:46.4,lng:-120.7,m:2},
-// === 2025 OREGON ===
-{n:"Cram",s:"OR",y:2025,a:95736,lat:44.797,lng:-121.942,m:2},
-{n:"Black Rock",s:"OR",y:2025,a:43842,lat:45.1,lng:-121.4,m:2},
-{n:"Emigrant",s:"OR",y:2025,a:33500,lat:43.85,lng:-122.4,m:3},
-{n:"Rock Creek",s:"OR",y:2025,a:31960,lat:42.8,lng:-117.3,m:1},
-{n:"Flat Fire",s:"OR",y:2025,a:23346,lat:44.513,lng:-121.354,m:3},
-{n:"Moon Complex",s:"OR",y:2025,a:19520,lat:42.2,lng:-124.15,m:3},
-{n:"Little John",s:"OR",y:2025,a:12934,lat:42.7,lng:-118.0,m:1},
-{n:"Ferry",s:"OR",y:2025,a:10458,lat:45.2,lng:-120.5,m:1},
-{n:"Black Hills",s:"OR",y:2025,a:4958,lat:42.5,lng:-117.5,m:1},
-{n:"Willow",s:"OR",y:2025,a:4417,lat:44.1,lng:-120.5,m:2},
-{n:"Rowena",s:"OR",y:2025,a:3700,lat:45.68,lng:-121.3,m:2},
-{n:"Helix",s:"OR",y:2025,a:3472,lat:45.85,lng:-118.65,m:1},
-{n:"Alder Springs",s:"OR",y:2025,a:3279,lat:44.4,lng:-121.2,m:3},
-{n:"Elk",s:"OR",y:2025,a:2637,lat:42.3,lng:-121.4,m:2},
-{n:"Cold Springs",s:"OR",y:2025,a:2489,lat:45.85,lng:-119.3,m:1},
-{n:"Butte Creek (Wasco)",s:"OR",y:2025,a:2046,lat:45.0,lng:-121.4,m:2},
-{n:"Butte Creek",s:"OR",y:2025,a:1776,lat:44.7,lng:-120.2,m:1},
-{n:"Marks Creek",s:"OR",y:2025,a:1718,lat:44.3,lng:-120.5,m:2},
-{n:"Mendiola Road",s:"OR",y:2025,a:1641,lat:43.7,lng:-117.15,m:1},
-{n:"Black Canyon",s:"OR",y:2025,a:1584,lat:42.5,lng:-119.7,m:1},
-{n:"Wolf Hollow",s:"OR",y:2025,a:1200,lat:45.3,lng:-120.2,m:1},
-{n:"Lost Tom",s:"OR",y:2025,a:1124,lat:44.5,lng:-117.3,m:1},
-{n:"Kelsey Peak",s:"OR",y:2025,a:1039,lat:42.5,lng:-123.6,m:3},
-// === 2025 WASHINGTON ===
-{n:"Lower Sugarloaf",s:"WA",y:2025,a:39928,lat:47.65,lng:-120.7,m:3},
-{n:"Labor Mountain",s:"WA",y:2025,a:37843,lat:47.3,lng:-120.9,m:3},
-{n:"Rattlesnake",s:"WA",y:2025,a:21845,lat:47.85,lng:-118.3,m:2},
-{n:"Bear Gulch",s:"WA",y:2025,a:20000,lat:47.5,lng:-123.2,m:3},
-{n:"Crown Creek Cx",s:"WA",y:2025,a:14192,lat:48.85,lng:-117.7,m:3},
-{n:"Burdoin",s:"WA",y:2025,a:10675,lat:45.714,lng:-121.431,m:2},
-{n:"Wildcat",s:"WA",y:2025,a:9574,lat:46.75,lng:-121.3,m:3},
-{n:"Lynx Mountain",s:"WA",y:2025,a:9168,lat:48.15,lng:-118.4,m:2},
-{n:"Hope",s:"WA",y:2025,a:8177,lat:48.8,lng:-117.8,m:3},
-{n:"Central Ferry",s:"WA",y:2025,a:6597,lat:46.6,lng:-117.7,m:1},
-{n:"Western Pines",s:"WA",y:2025,a:5781,lat:47.8,lng:-118.1,m:2},
-{n:"Wooden Road",s:"WA",y:2025,a:4905,lat:46.3,lng:-118.0,m:1},
-{n:"Katy Creek",s:"WA",y:2025,a:4674,lat:48.6,lng:-118.2,m:3},
-{n:"Tacoma Creek",s:"WA",y:2025,a:3960,lat:48.4,lng:-117.3,m:3},
-{n:"Firewater",s:"WA",y:2025,a:3820,lat:46.5,lng:-120.5,m:1},
-{n:"Pomas",s:"WA",y:2025,a:3533,lat:47.9,lng:-120.6,m:3},
-{n:"Apple Acres",s:"WA",y:2025,a:3410,lat:48.0,lng:-119.9,m:2},
-{n:"Lake Spokane",s:"WA",y:2025,a:2550,lat:47.85,lng:-117.6,m:2},
-{n:"Vansycle Canyon",s:"WA",y:2025,a:2026,lat:45.9,lng:-118.5,m:1},
-{n:"Perry",s:"WA",y:2025,a:1772,lat:48.8,lng:-121.1,m:3},
-{n:"Barstow",s:"WA",y:2025,a:1543,lat:46.2,lng:-118.3,m:1},
-{n:"Boundary Road",s:"WA",y:2025,a:1210,lat:46.2,lng:-120.3,m:1},
-{n:"Snow Peak",s:"WA",y:2025,a:1147,lat:48.5,lng:-118.5,m:3},
-];
-function addFallback(yearFilter){
-  const cols={3:'#4a9e4a',2:'#c9a33a',1:'#6e675f'};
-  const fires=yearFilter?FB.filter(f=>f.y===yearFilter):FB;
-  fires.forEach(f=>{
-    const r=Math.sqrt(f.a*4046.86/Math.PI),op=f.y===2025?.28:.18;
-    const layer=L.circle([f.lat,f.lng],{radius:r,color:cols[f.m],fillColor:cols[f.m],fillOpacity:op,weight:f.m===3?2:1,opacity:f.m===3?.8:.5});
-    layer.bindPopup(makePopup(f.n,f.a,f.s,f.y,f.m,'<div class="pd" style="color:#6e675f">Boundary: estimated circle</div>'),{closeButton:false});
-    layer.addTo(map);
-    allFires.push({layer:layer,data:{name:f.n,acres:f.a,state:f.s,year:f.y,morel:f.m,source:'local'}});
-  });
-}
-
-// === NIFC LOADER ===
-// Uses spatial filter only (no field name guessing in WHERE). Parses whatever fields come back.
-async function tryNIFC(url, year){
+// === NIFC BOUNDARY LOADER ===
+// Try many service URLs, use spatial filter, detect fields dynamically
+async function queryNIFC(url,label){
+  log('Trying '+label+'...');
   const bbox=encodeURIComponent('{"xmin":-125,"ymin":41.9,"xmax":-116.4,"ymax":49.1,"spatialReference":{"wkid":4326}}');
-  const q=url+'/query?where=1%3D1&geometry='+bbox+'&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326&f=geojson&resultRecordCount=300&maxAllowableOffset=0.003';
-  const resp=await fetch(q);
-  if(!resp.ok) throw new Error('HTTP '+resp.status);
-  const data=await resp.json();
-  if(data.error) throw new Error(data.error.message||'ArcGIS error');
-  if(!data.features||!data.features.length) throw new Error('No features');
+  const q=url+'/query?where=1%3D1&geometry='+bbox+'&geometryType=esriGeometryEnvelope&inSR=4326&spatialRel=esriSpatialRelIntersects&outFields=*&outSR=4326&f=geojson&resultRecordCount=500&maxAllowableOffset=0.003';
+  const r=await fetch(q);
+  if(!r.ok)throw new Error('HTTP '+r.status);
+  const d=await r.json();
+  if(d.error)throw new Error(d.error.message||JSON.stringify(d.error));
+  if(!d.features)throw new Error('No features array');
+  log(label+': '+d.features.length+' raw features returned','ok');
+  return d;
+}
+
+function getField(p,candidates){
+  for(const c of candidates){if(p[c]!==undefined&&p[c]!==null)return p[c]}
+  return null;
+}
+
+function processFeatures(data){
   let count=0;
+  // Log first feature's field names for debugging
+  if(data.features.length>0){
+    const keys=Object.keys(data.features[0].properties||{}).join(', ');
+    log('Fields: '+keys.substring(0,120));
+  }
   data.features.forEach(feat=>{
-    if(!feat.geometry) return;
+    if(!feat.geometry||!feat.geometry.coordinates)return;
     const p=feat.properties||{};
-    // Detect field names dynamically
-    const acres=p.poly_GISAcres||p.GIS_ACRES||p.ACRES||p.attr_GISAcres||p.Shape__Area||0;
-    if(acres<1000) return;
-    const name=p.attr_IncidentName||p.INCIDENT||p.FIRE_NAME||p.IncidentName||p.poly_IncidentName||'Unknown';
-    const state=(p.attr_POOState||p.POOState||p.STATE||'').replace('US-','');
-    if(state&&!['OR','WA'].includes(state)) return;
-    const fg=p.attr_PredominantFuelGroup||p.PredominantFuelGroup||'';
-    const fm=p.attr_PredominantFuelModel||p.PredominantFuelModel||'';
-    const fl=(fg+' '+fm).toLowerCase();
-    const morel=fl.includes('timber')||fl.includes('slash')?3:fl.includes('brush')||fl.includes('shrub')?2:fl.includes('grass')?1:2;
-    const cols={3:'#4a9e4a',2:'#c9a33a',1:'#6e675f'};
-    const op=year===2025?.35:.22;
-    const layer=L.geoJSON(feat,{style:{color:cols[morel],fillColor:cols[morel],fillOpacity:op,weight:morel===3?2:1,opacity:morel===3?.8:.5}});
-    layer.bindPopup(makePopup(name,acres,state,year,morel,'<div class="pd">Fuel: '+(fg||'N/A')+'</div>'),{closeButton:false});
+    // Detect year
+    const year=getField(p,['FIRE_YEAR','FireYear','attr_FireYear','fire_year']);
+    if(year&&Number(year)!==2025)return;
+    // If no year field, check discovery date
+    if(!year){
+      const dt=getField(p,['attr_FireDiscoveryDateTime','FireDiscoveryDateTime','CreateDate','DISCOVERY_','DiscoveryDate']);
+      if(dt){
+        const yr=new Date(dt).getFullYear();
+        if(yr!==2025)return;
+      }
+    }
+    // Detect acres
+    const acres=getField(p,['poly_GISAcres','GIS_ACRES','ACRES','attr_GISAcres','GISAcres','Shape__Area']);
+    if(acres!==null&&acres<1000)return;
+    // Detect name
+    const name=getField(p,['attr_IncidentName','INCIDENT','FIRE_NAME','IncidentName','poly_IncidentName','FireName'])||'Unknown';
+    // Detect state
+    const stRaw=getField(p,['attr_POOState','POOState','STATE','State'])||'';
+    const state=stRaw.replace('US-','');
+    if(state&&!['OR','WA',''].includes(state))return;
+    // Detect fuel
+    const fuel=getField(p,['attr_PredominantFuelGroup','PredominantFuelGroup','FUEL_TYPE'])||'';
+    const morel=fuelM(fuel);
+    // Render boundary polygon
+    const layer=L.geoJSON(feat,{style:{color:C[morel],fillColor:C[morel],fillOpacity:.3,weight:morel===3?2.5:1.5,opacity:morel===3?.9:.6}});
+    layer.bindPopup(popup(name,acres,state||'OR/WA',morel,'<div class="pd">Fuel: '+(fuel||'N/A')+'</div><div class="pd" style="color:#6db56d">NIFC boundary</div>'),{closeButton:false,maxWidth:280});
     layer.addTo(map);
-    allFires.push({layer:layer,data:{name:name,acres:acres,state:state,year:year,morel:morel,source:'nifc'}});
     count++;
   });
   return count;
 }
 
-// === INIT ===
-(async function(){
-  // Try NIFC first
-  toast('Loading NIFC fire perimeters...','');
-  let total=0;
-  const urls=[
-    // 2024 services
-    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2024_Interagency_Fire_Perimeters_to_Date/FeatureServer/0',y:2024},
-    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2024_Interagency_Fire_Perimeters/FeatureServer/0',y:2024},
-    // 2025 services
-    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2025_Interagency_Fire_Perimeters_to_Date/FeatureServer/0',y:2025},
-    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2025_Interagency_Fire_Perimeters/FeatureServer/0',y:2025},
-    // Historical (has both years)
-    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/InterAgencyFirePerimeterHistory_All_Years_View/FeatureServer/0',y:2024},
+// Fallback circles
+function addCircles(){
+  log('Adding approximate circles as fallback...','err');
+  const F=[
+  {n:"Cram",s:"OR",a:95736,lat:44.797,lng:-121.942,m:2},{n:"Black Rock",s:"OR",a:43842,lat:45.1,lng:-121.4,m:2},
+  {n:"Emigrant",s:"OR",a:33500,lat:43.85,lng:-122.4,m:3},{n:"Rock Creek",s:"OR",a:31960,lat:42.8,lng:-117.3,m:1},
+  {n:"Flat Fire",s:"OR",a:23346,lat:44.513,lng:-121.354,m:3},{n:"Moon Complex",s:"OR",a:19520,lat:42.2,lng:-124.15,m:3},
+  {n:"Little John",s:"OR",a:12934,lat:42.7,lng:-118.0,m:1},{n:"Ferry",s:"OR",a:10458,lat:45.2,lng:-120.5,m:1},
+  {n:"Willow",s:"OR",a:4417,lat:44.1,lng:-120.5,m:2},{n:"Rowena",s:"OR",a:3700,lat:45.68,lng:-121.3,m:2},
+  {n:"Alder Springs",s:"OR",a:3279,lat:44.4,lng:-121.2,m:3},{n:"Kelsey Peak",s:"OR",a:1039,lat:42.5,lng:-123.6,m:3},
+  {n:"Lower Sugarloaf",s:"WA",a:39928,lat:47.65,lng:-120.7,m:3},{n:"Labor Mountain",s:"WA",a:37843,lat:47.3,lng:-120.9,m:3},
+  {n:"Rattlesnake",s:"WA",a:21845,lat:47.85,lng:-118.3,m:2},{n:"Bear Gulch",s:"WA",a:20000,lat:47.5,lng:-123.2,m:3},
+  {n:"Crown Creek Cx",s:"WA",a:14192,lat:48.85,lng:-117.7,m:3},{n:"Burdoin",s:"WA",a:10675,lat:45.714,lng:-121.431,m:2},
+  {n:"Wildcat",s:"WA",a:9574,lat:46.75,lng:-121.3,m:3},{n:"Hope",s:"WA",a:8177,lat:48.8,lng:-117.8,m:3},
+  {n:"Katy Creek",s:"WA",a:4674,lat:48.6,lng:-118.2,m:3},{n:"Pomas",s:"WA",a:3533,lat:47.9,lng:-120.6,m:3},
+  {n:"Perry",s:"WA",a:1772,lat:48.8,lng:-121.1,m:3},
   ];
-  let tried2024=false,tried2025=false;
-  for(const svc of urls){
-    if(svc.y===2024&&tried2024) continue;
-    if(svc.y===2025&&tried2025) continue;
+  F.forEach(f=>{
+    const r=Math.sqrt(f.a*4046.86/Math.PI);
+    L.circle([f.lat,f.lng],{radius:r,color:C[f.m],fillColor:C[f.m],fillOpacity:.25,weight:f.m===3?2:1.2,opacity:.7})
+      .bindPopup(popup(f.n,f.a,f.s,f.m,'<div class="pd" style="color:#c97b3a">Approximate boundary (circle)</div>'),{closeButton:false,maxWidth:280})
+      .addTo(map);
+  });
+  log(F.length+' approximate fire areas shown','err');
+}
+
+// === TRY NIFC ===
+(async function(){
+  const services=[
+    // 2025-specific services (various naming patterns)
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2025_Interagency_Fire_Perimeters_to_Date/FeatureServer/0',l:'WFIGS 2025 to Date'},
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_-_2025_Interagency_Fire_Perimeters/FeatureServer/0',l:'WFIGS 2025'},
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_2025_Interagency_Fire_Perimeters_to_Date/FeatureServer/0',l:'WFIGS 2025 alt'},
+    // General current perimeters
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/WFIGS_Interagency_Perimeters/FeatureServer/0',l:'WFIGS Current'},
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/Public_Wildfire_Perimeters_View/FeatureServer/0',l:'Public View'},
+    // Historical (should have 2025 by now)
+    {u:'https://services3.arcgis.com/T4QMspbfLg3qTGWY/arcgis/rest/services/InterAgencyFirePerimeterHistory_All_Years_View/FeatureServer/0',l:'Historical'},
+  ];
+  let loaded=false;
+  for(const svc of services){
     try{
-      const n=await tryNIFC(svc.u,svc.y);
-      if(n>0){total+=n;if(svc.y===2024)tried2024=true;if(svc.y===2025)tried2025=true;}
-    }catch(e){console.log('NIFC',svc.y,svc.u.split('/services/')[1],e.message)}
+      const data=await queryNIFC(svc.u,svc.l);
+      if(data.features.length===0){log(svc.l+': empty','err');continue}
+      const n=processFeatures(data);
+      if(n>0){
+        log('<strong>'+n+' fire boundaries loaded from '+svc.l+'</strong>','ok');
+        loaded=true;
+        break;
+      }else{
+        log(svc.l+': features returned but 0 matched 2025 OR/WA >1000ac','err');
+      }
+    }catch(e){
+      log(svc.l+': '+e.message,'err');
+    }
   }
-  if(total>0){
-    toast('Loaded '+total+' NIFC perimeters'+((!tried2024||!tried2025)?' + local data':''),'ok',4000);
+  if(!loaded){
+    log('No NIFC boundaries available. Showing circles.','err');
+    addCircles();
   }
-  // Fill in fallback circles for any year NIFC didn't cover
-  if(!tried2024) addFallback(2024);
-  if(!tried2025) addFallback(2025);
-  // Source label
-  if(tried2024&&tried2025) document.getElementById('src').textContent='NIFC';
-  else if(tried2024||tried2025) document.getElementById('src').textContent='Mixed';
-  else document.getElementById('src').textContent='Local';
-  updateStats();
+  hideStatus();
 })();
 </script>
 </body>
