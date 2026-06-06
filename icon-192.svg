@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <rect width="512" height="512" rx="96" fill="#1a1a1a"/>
+  <!-- Fire glow background -->
+  <ellipse cx="256" cy="320" rx="140" ry="80" fill="#c97b3a" opacity="0.15"/>
+  <!-- Morel stem -->
+  <path d="M232 360 Q228 310 234 280 Q236 260 240 250 L272 250 Q276 260 278 280 Q284 310 280 360 Z" fill="#d4c4a0" stroke="#b0a080" stroke-width="2"/>
+  <!-- Morel cap -->
+  <path d="M210 260 Q210 180 230 150 Q240 135 256 120 Q272 135 282 150 Q302 180 302 260 Q280 270 256 272 Q232 270 210 260 Z" fill="#5a4a30" stroke="#4a3a20" stroke-width="2"/>
+  <!-- Morel pits/ridges -->
+  <ellipse cx="240" cy="190" rx="12" ry="16" fill="#3a2a15" opacity="0.6"/>
+  <ellipse cx="268" cy="185" rx="10" ry="14" fill="#3a2a15" opacity="0.6"/>
+  <ellipse cx="252" cy="210" rx="11" ry="13" fill="#3a2a15" opacity="0.6"/>
+  <ellipse cx="236" cy="230" rx="10" ry="11" fill="#3a2a15" opacity="0.5"/>
+  <ellipse cx="264" cy="225" rx="10" ry="12" fill="#3a2a15" opacity="0.5"/>
+  <ellipse cx="250" cy="248" rx="9" ry="8" fill="#3a2a15" opacity="0.4"/>
+  <ellipse cx="256" cy="165" rx="8" ry="12" fill="#3a2a15" opacity="0.5"/>
+  <!-- Small flame left -->
+  <path d="M160 380 Q158 340 170 310 Q175 330 172 350 Q178 320 185 300 Q188 340 182 370 Q175 390 160 380 Z" fill="#c97b3a" opacity="0.7"/>
+  <path d="M166 370 Q165 345 172 325 Q174 345 170 360 Z" fill="#e8b43d" opacity="0.6"/>
+  <!-- Small flame right -->
+  <path d="M340 375 Q338 335 350 305 Q355 325 352 345 Q358 315 365 295 Q368 335 362 365 Q355 385 340 375 Z" fill="#c97b3a" opacity="0.7"/>
+  <path d="M346 365 Q345 340 352 320 Q354 340 350 355 Z" fill="#e8b43d" opacity="0.6"/>
+  <!-- Ground line -->
+  <path d="M140 385 Q200 370 256 375 Q312 370 372 385" stroke="#6e675f" stroke-width="2" fill="none" stroke-dasharray="4,4"/>
+  <!-- Text -->
+  <text x="256" y="440" text-anchor="middle" font-family="sans-serif" font-weight="700" font-size="36" fill="#c97b3a" letter-spacing="3">MOREL SCOUT</text>
+  <text x="256" y="468" text-anchor="middle" font-family="sans-serif" font-weight="400" font-size="18" fill="#8a8278" letter-spacing="2">PNW BURNS</text>
+</svg>
